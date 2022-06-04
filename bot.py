@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os, asyncio, discord, json, datetime
 from discord.ext import commands
 import git
@@ -32,6 +31,7 @@ author = Actor("comradecrow", "comradecrow@vivaldi.net")
 
 origin = repo.remote()
 assert origin.exists()
+origin.pull()
 
 index = repo.index
 assert len(list(index.iter_blobs())) == len([o for o in repo.head.commit.tree.traverse() if o.type == 'blob'])
@@ -55,7 +55,9 @@ if not os.path.isfile("data/users.json"):
 with open("data/users.json", "r", encoding='utf-8') as f:
     data = json.load(f)
 
-load_dotenv()
+if os.name == "nt":
+    from dotenv import load_dotenv
+    load_dotenv()
 TOKEN = os.getenv('TOKEN');
 
 description = '''Jhonathan M. Binns'''
