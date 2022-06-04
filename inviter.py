@@ -95,4 +95,5 @@ if __name__ == "__main__":
     I = Inviter(username, apikey)
     # print(I.get_json())
     # I.send_invites()
-    I.dump_json(I.fetch_invites())
+    # I.dump_json(I.fetch_invites())
+    print(I.get_invite_list())
