@@ -20,12 +20,12 @@ class GithubWrapper(object):
     def get_colab_list(self):
         resp = [];
         for i in self.fetch_collaborators():
-            resp.append(i["login"])
+            resp.append(i["login"].lower())
         return resp;
     def get_invite_list(self):
         resp = [];
         for i in self.fetch_invites():
-            resp.append(i["invitee"]["login"])
+            resp.append(i["invitee"]["login"].lower())
         return resp;
     def add_collab(self, username, permission="push"):
         # x = self.s.put("https://httpbin.org/put", params={"permission":"push"})
@@ -51,10 +51,10 @@ class Inviter(GithubWrapper):
         users = self.get_json()
         invites = self.get_invite_list()
         for i in users:
-            if users[i] not in resp:
-                if users[i] not in invites:
-                    print(users[i])
-                    x = self.add_collab(users[i])
+            if users[i].lower() not in resp:
+                if users[i].lower() not in invites:
+                    print(users[i].lower())
+                    x = self.add_collab(users[i].lower())
                     print(x)
                     print(x.json())
                     if x.status_code == 201:
@@ -67,6 +67,7 @@ class Inviter(GithubWrapper):
 
 
     def send_invite_to(self, user):
+        user = user.lower()
         if user not in self.get_colab_list():
             if user not in self.get_invite_list():
                 print(user)
@@ -78,7 +79,7 @@ class Inviter(GithubWrapper):
                 else:
                     return -1
             else:
-                print(F"{user} alr4eady invited")
+                print(F"{user} already invited")
                 return 2
 
 
