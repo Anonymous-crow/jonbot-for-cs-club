@@ -104,7 +104,7 @@ async def join(ctx, *, githubusrnme):
     index.add(['users.json'])
     index.commit(F"autocommit {e.strftime('%Y-%m-%d %H-%M-%S')}", author=author)
     origin.push()
-    invite(githubusrnme, ctx.author.id)
+    await invite(githubusrnme, ctx.author.id)
     await ctx.send('Sent an invite to: {} for {}'.format(githubusrnme, str(ctx.author)))
 
 bot.run(TOKEN)
