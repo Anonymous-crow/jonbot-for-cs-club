@@ -1,4 +1,5 @@
 import os, asyncio, discord, json, datetime
+from inviter import Inviter
 from discord.ext import commands
 import git
 from git import Repo
@@ -58,7 +59,10 @@ with open("data/users.json", "r", encoding='utf-8') as f:
 if os.name == "nt":
     from dotenv import load_dotenv
     load_dotenv()
-TOKEN = os.getenv('TOKEN');
+TOKEN = os.getenv('TOKEN')
+username = os.getenv('user')
+apikey = os.getenv('apikey')
+I = Inviter(username, apikey)
 
 description = '''Jhonathan M. Binns'''
 intents = discord.Intents.default()
@@ -68,7 +72,7 @@ bot = commands.Bot(command_prefix='!', description=description, intents=intents)
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
+    print('BOT Logged in as')
     print(bot.user.name)
     print(bot.user.id)
     print('------')
@@ -83,6 +87,11 @@ async def on_ready():
     game = discord.Game("Terraria")
     await bot.change_presence(status=discord.Status.online, activity=game)
 
+async def invite(username, id):
+    I.send_invite_to(username)
+    user = bot.get_user(id)
+    await user.send("You have been invited to the Computer Science Club Github repository!  You can click this link to access your invitation: https://github.com/Computer-Science-Club-OCC/Computer-Science-Club-OCC.github.io/invitations")
+
 @bot.command()
 async def join(ctx, *, githubusrnme):
     print({str(ctx.author): githubusrnme})
@@ -95,7 +104,7 @@ async def join(ctx, *, githubusrnme):
     index.add(['users.json'])
     index.commit(F"autocommit {e.strftime('%Y-%m-%d %H-%M-%S')}", author=author)
     origin.push()
-
+    invite(githubusrnme, ctx.author.id)
     await ctx.send('Sent an invite to: {} for {}'.format(githubusrnme, str(ctx.author)))
 
 bot.run(TOKEN)
