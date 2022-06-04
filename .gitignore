@@ -5,3 +5,4 @@
 *.sh
 data/
 inviter/
+*.json

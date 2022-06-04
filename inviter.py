@@ -13,10 +13,19 @@ class GithubWrapper(object):
         # x = self.s.get("https://httpbin.org/get")
         x = self.s.get("https://api.github.com/repos/Computer-Science-Club-OCC/Computer-Science-Club-OCC.github.io/collaborators")
         return x.json()
+    def fetch_invites(self):
+        # x = self.s.get("https://httpbin.org/get")
+        x = self.s.get("https://api.github.com/repos/Computer-Science-Club-OCC/Computer-Science-Club-OCC.github.io/invitations")
+        return x.json()
     def get_colab_list(self):
         resp = [];
         for i in self.fetch_collaborators():
             resp.append(i["login"])
+        return resp;
+    def get_invite_list(self):
+        resp = [];
+        for i in self.fetch_invites():
+            resp.append(i["invitee"]["login"])
         return resp;
     def add_collab(self, username, permission="push"):
         # x = self.s.put("https://httpbin.org/put", params={"permission":"push"})
@@ -40,21 +49,37 @@ class Inviter(GithubWrapper):
     def send_invites(self):
         resp = self.get_colab_list()
         users = self.get_json()
+        invites = self.get_invite_list()
         for i in users:
             if users[i] not in resp:
-                print(users[i])
-                x = self.s.put("https://httpbin.org/put", params={"permission":"push"})
-                # x = self.add_collab(users[i])
-                print(x)
-                print(x.json())
+                if users[i] not in invites:
+                    print(users[i])
+                    x = self.add_collab(users[i])
+                    print(x)
+                    print(x.json())
+                    if x.status_code == 201:
+                        return 0
+                    else:
+                        return -1
+                else:
+                    print(F"{users[i]} alr4eady invited")
+                    return 2
+
 
     def send_invite_to(self, user):
         if user not in self.get_colab_list():
-            print(user)
-            # x = self.add_collab(user)
-            x = self.s.put("https://httpbin.org/put", params={"permission":"push"})
-            print(x)
-            print(x.json())
+            if user not in self.get_invite_list():
+                print(user)
+                x = self.add_collab(user)
+                print(x)
+                print(x.json())
+                if x.status_code == 201:
+                    return 0
+                else:
+                    return -1
+            else:
+                print(F"{user} alr4eady invited")
+                return 2
 
 
 
@@ -67,6 +92,6 @@ if __name__ == "__main__":
     username = os.getenv('user')
     apikey = os.getenv('apikey')
     I = Inviter(username, apikey)
-    print(I.get_json())
-    I.send_invites()
-    I.dump_json(I.fetch_collaborators())
+    # print(I.get_json())
+    # I.send_invites()
+    I.dump_json(I.fetch_invites())
