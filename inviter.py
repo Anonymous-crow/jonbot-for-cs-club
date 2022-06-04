@@ -7,7 +7,7 @@ class GithubWrapper(object):
         import requests, time
         self.s = requests.Session()
         self.s.headers.update( {"Accept":"application/vnd.github.v3+json"} )
-        print((username, apikey))
+        # print((username, apikey))
         self.s.auth = (username, apikey)
     def fetch_collaborators(self):
         # x = self.s.get("https://httpbin.org/get")
