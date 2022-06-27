@@ -4,7 +4,6 @@ class GithubWrapper(object):
     """docstring for GithubWrapper."""
 
     def __init__(self, username, apikey):
-        import requests, time
         self.s = requests.Session()
         self.s.headers.update( {"Accept":"application/vnd.github.v3+json"} )
         # print((username, apikey))
@@ -93,7 +92,7 @@ if __name__ == "__main__":
     username = os.getenv('user')
     apikey = os.getenv('apikey')
     I = Inviter(username, apikey)
+    I.send_invites()
     # print(I.get_json())
-    # I.send_invites()
     # I.dump_json(I.fetch_invites())
-    print(I.get_invite_list())
+    # print(I.get_invite_list())
