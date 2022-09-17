@@ -18,7 +18,10 @@ class GithubWrapper(object):
         return x.json()
     def get_colab_list(self):
         resp = [];
-        for i in self.fetch_collaborators():
+        colab = self.fetch_collaborators()
+        if "message" in colab and colab["message"] == "Bad credentials":
+            raise Exception("Bad Credentials") 
+        for i in colab: 
             resp.append(i["login"].lower())
         return resp;
     def get_invite_list(self):

@@ -72,7 +72,7 @@ class gitwrapper(object):
             with open("data/users.json", "r", encoding='utf-8') as f:
                 data = json.load(f)
 
-    def make_commit(self):
+    async def make_commit(self):
         if self.isup:
             print({str(ctx.author): githubusrnme})
             e = datetime.datetime.now()
@@ -84,6 +84,7 @@ class gitwrapper(object):
             self.index.add(['users.json'])
             self.index.commit(F"autocommit {e.strftime('%Y-%m-%d %H-%M-%S')}", author=author)
             self.origin.push()
+        return 0
 
 if os.name == "nt":
     from dotenv import load_dotenv
@@ -145,6 +146,6 @@ async def invite(username, id):
 async def join(ctx, *, githubusrnme):
     await invite(githubusrnme, ctx.author.id)
     await ctx.send('Sent an invite to: {} for {}'.format(githubusrnme, str(ctx.author)))
-    await make_commit()
+    await G.make_commit()
 
 bot.run(TOKEN)
