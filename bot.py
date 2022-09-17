@@ -3,6 +3,7 @@ from inviter import Inviter
 from discord.ext import commands
 import git
 from git import Repo
+from requests.exceptions import ConnectTimeout
 
 class gitwrapper(object):
     """docstring for gitwrapper."""
