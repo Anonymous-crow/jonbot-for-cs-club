@@ -10,10 +10,13 @@ class gitwrapper(object):
     def __init__(self):
         self.isup = False
         self.repo_path = "data"
-        if requests.get("https://crow.port0.org/git").status_code == 200:
-            self.isup = True
-        else:
-            print("git repository is down, starting in invite only mode")
+        try:
+            if requests.get("https://crow.port0.org/git", timeout=10).status_code == 200:
+                self.isup = True
+            else:
+                print("git repository is down, starting in invite only mode")
+        except ConnectTimeout:
+            print("git repository is unreachable, starting in invite only mode")
         self.initgit()
 
     def print_repository(self, repo):
