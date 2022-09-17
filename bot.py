@@ -92,7 +92,7 @@ I = Inviter(username, apikey)
 G = gitwrapper()
 
 description = '''Jhonathan M. Binns'''
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 
 bot = commands.Bot(command_prefix='!', description=description, intents=intents)
